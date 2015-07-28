@@ -63,11 +63,11 @@ var App = React.createClass({
 
     return (<div className="row">
 
-    			<div className="col-xs-12">
+    			<div className="col-sm-12">
     				<a href="https://www.woodcraft.org.uk"><img src="logo.png" style={imgStyle} className="pull-right" /></a>
     				<h1>Sustainability Scorecard</h1>
     			</div>
-    			<div className="col-xs-8">
+    			<div className="col-sm-8">
     				<div className="panel panel-default hidden-print">
   						<div className="panel-body">
   						<form className="form-inline">
@@ -83,7 +83,7 @@ var App = React.createClass({
 					<div className="visible-print-block visible-print"><h2>{this.state.group}</h2></div>
     				<Questions dataSet={D[this.state.dataSet]}  />
     			</div>
-    			<div className="col-xs-4">
+    			<div className="col-sm-4">
     				<Results dataSet={D[this.state.dataSet]}/>
     				<button type="button" onClick={this.saveResult} className="btn btn-success pull-left hidden-print">Save</button>
     				<div style={spinStyle}><Spinner/></div>
