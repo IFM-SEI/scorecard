@@ -8,14 +8,20 @@ var App = React.createClass({
 
 	componentDidMount:function() {
 		Store.e.on("synced", this.saved);
+		Store.e.on("scoreUpdated", this.change);
 	},
 
 	componentWillUnmount:function() {
 		Store.e.off("synced", this.saved);
+		Store.e.on("scoreUpdated", this.change);
 	},
 
 	getInitialState: function() {
-    	return {group:Store.getGroup(),dataSet:Store.getCard(),validating: false,saved: false};
+    	return {group:Store.getGroup(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false};
+  	},
+
+  	change: function() {
+    	this.setState({group:Store.getGroup(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false});
   	},
 
 	handleChange: function(event) {
@@ -32,6 +38,13 @@ var App = React.createClass({
 
 	},
 
+	selectGroupType: function(event) { 
+
+		Dispatcher.dispatch({action:"setGroupType",set:event.target.value});
+		this.setState({groupType:event.target.value});
+
+	},
+
 	handleBlur: function () {
  		 this.setState({validating: true});
 	},
@@ -42,6 +55,7 @@ var App = React.createClass({
 	},
 
 	saved: function () {
+		this.setState({hasSaved: this.state.saved ? true : false});
 		this.setState({saved: false});
 	},
 
@@ -56,8 +70,10 @@ var App = React.createClass({
 
   	var imgStyle= {height:"75px"};
   	var spinStyle = {width:"27px", height:"27px", marginLeft:"50px"};
+  	var textStyle = {};
 
   	spinStyle.display = this.state.saved ?  "block" : "none";
+  	textStyle.display = this.state.hasSaved ?  "block" : "none";
 
   	var inputClass = this.state.validating ? this.state.group === "" ? "form-group has-error" :"form-group has-success" : "form-group";
 
@@ -77,6 +93,15 @@ var App = React.createClass({
 							<div className="form-group">
 							<lable className="control-label">&nbsp;&nbsp;&nbsp;Card: </lable><select className="form-control" onChange={this.selectDataSet} value={this.state.dataSet}>{options}</select>
 							</div>
+							<div className="form-group">
+							<lable className="control-label">&nbsp;&nbsp;&nbsp;Type: </lable><select className="form-control" onChange={this.selectGroupType} value={this.state.groupType}>
+								<option name="Elfin">Elfin</option>
+								<option name="Pioneer">Pioneer</option>
+								<option name="Venturer">Venturer</option>
+								<option name="Open">Open</option>
+								<option name="NA">N/A</option>
+							</select>
+							</div>
 						</form>
 						</div>						
 					</div>
@@ -85,8 +110,11 @@ var App = React.createClass({
     			</div>
     			<div className="col-sm-4">
     				<Results dataSet={D[this.state.dataSet]}/>
-    				<button type="button" onClick={this.saveResult} className="btn btn-success pull-left hidden-print">Save</button>
-    				<div style={spinStyle}><Spinner/></div>
+    				<div className="clearfix">
+    					<button type="button" onClick={this.saveResult} className="btn btn-success pull-left hidden-print">Save</button>
+    					<div style={spinStyle}><Spinner/></div>
+    				</div>
+    				<div style={textStyle} className="alert alert-success voffset2"><p>Thank you for taking the time to fill this out, you can bookmark this page, save the <a href={window.location.href}>link</a>, or <a href="javascript:print()">print</a> this page for future reference.</p></div>
     			</div>
       		</div>);
   }
@@ -111,7 +139,7 @@ var Results = React.createClass({
     						<tbody>
     						<tr><td>0</td><td>Not in place, not progressed, no target date in place</td></tr>
 							<tr><td>1</td><td>Not yet in place, but progress behind target</td></tr>
-							<tr><td>0</td><td>Not yet in place, on track to achieve target date</td></tr>
+							<tr><td>2</td><td>Not yet in place, on track to achieve target date</td></tr>
 							<tr><td>3</td><td>In place, complete</td></tr>
 							</tbody>
 						</table>
@@ -186,6 +214,20 @@ var Questions = React.createClass({
 });
 
 var QuestionRow = React.createClass({
+
+	componentDidMount: function(){
+		Store.e.on("scoreUpdated", this.change);
+	},
+
+	componentWillUnmount: function(){
+		Store.e.off("scoreUpdated", this.change);
+	},
+
+
+  	change: function() {
+
+  		this.setState({score:Store.getQuestion(this.props.id)})
+  	},
 
 	getInitialState: function() {
     	return {score:Store.getQuestion(this.props.id)};

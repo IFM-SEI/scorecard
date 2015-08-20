@@ -8,15 +8,42 @@ var session = {};
 
 var localData = localStorage.getItem("sessionData");
 
-if(localData) {
-	session = JSON.parse(localData);
-} else {
+var clearData = function() {
+
+	session.hash = "";
 	session.group = "";
+	session.groupType= "Elfin";
 	session.card = 0;
 	session.cardName = D[0].name;
 	session.data = []
 	session.data[session.card] = [];
 	session.catresults=[];
+
+}
+
+if(window.location.hash) {
+	clearData();
+	//get data
+	$.getJSON('get_session.php', {key:window.location.hash.replace("#","")}, function(data) {
+		session = data;
+		window.location.hash = session.hash;
+		exports.e.emit("scoreUpdated");
+		//exports.e.emit("synced");
+	});
+
+} else if(localData) {
+	session = JSON.parse(localData);
+	window.location.hash = session.hash;
+
+} else {
+	//get a hash
+
+	$.get('get_session.php', null, function(data) {
+		session.hash = data;
+		//window.location.hash = session.hash;
+	});
+	
+	clearData();
 }
 
 
@@ -35,11 +62,15 @@ exports.token = Dispatcher.register(function(payload){
 		case "setGroup":
 			setGroup(payload);
 			break;
+		case "setGroupType":
+			setGroupType(payload);
+			break;
 		case "syncData":
 			save();
 			break;
 	};
 });
+
 
 
 var save = function() {
@@ -57,6 +88,7 @@ var save = function() {
 	};
 	//ajaxx save
 	$.post('save.php', {sessionData:data}, function() {
+		window.location.hash = session.hash;
 		setTimeout(fireSync,2000);
 	});
 }
@@ -80,6 +112,11 @@ var setGroup = function(d) {
 	session.group = d.set;
 }
 
+var setGroupType = function(d) {
+
+	session.groupType = d.set;
+}
+
 var getPercent = function(c) {
 	var total = 0;
 	D[session.card].categories[c].questions.map(function(v){if(session.data[session.card][v])total += session.data[session.card][v];});
@@ -95,6 +132,10 @@ var getGroup = function() {
 	return session.group;
 }
 
+var getGroupType = function() {
+	return session.groupType;
+}
+
 var getQuestion = function(q) {
 	return session.data[session.card][q];
 }
@@ -103,6 +144,7 @@ var getQuestion = function(q) {
 
 exports.getCard = getCard;
 exports.getGroup = getGroup;
+exports.getGroupType = getGroupType;
 exports.getPercent = getPercent;
 exports.getQuestion = getQuestion;
 //exports.setDataset = setDataset;

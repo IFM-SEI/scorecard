@@ -10,6 +10,7 @@ existing.questions = [
 {q:"Health and consent forms obtained for children attending regularly", g:"Group"},
 {q:"Local Safeguarding Officer in place, with appropriate support/training", g:"Either/Both"},
 {q:"Volunteer Co-ordinator in place, with appropriate support/training", g:"Either/Both"},
+{q:"Sufficient volunteers to ensure adult:child ratios are met for each age group", g:"Group"},
 {q:"Membership & screening checks in place for all regular leaders", g:"Group"},
 {q:"At least 50% of group leaders have attended New Leader Training", g:"Group"},
 {q:"Group numbers stable or growing term by term", g:"Group"},
@@ -58,6 +59,7 @@ newGroups.questions = [
 {q:"Health and consent forms obtained for children attending regularly", g:"Group"},
 {q:"Local Safeguarding Officer in place, with appropriate support/training", g:"Either/Both"},
 {q:"Volunteer Co-ordinator in place, with appropriate support/training", g:"Either/Both"},
+{q:"Sufficient volunteers to ensure adult:child ratios are met for each age group", g:"Group"},
 {q:"Membership & screening checks in place for all regular leaders", g:"Group"},
 {q:"At least 50% of group leaders have attended New Leader Training", g:"Group"},
 {q:"Group numbers stable or growing term by term", g:"Group"},
@@ -133,7 +135,7 @@ projects .questions=[
 {q:"Group programme is planned by leaders and helpers on a termly/half-termly basis", g:"Group"},
 {q:"Group activities demonstrate and explore Woodcraft values", g:"Group"},
 {q:"Group/district has undertaken or is following the Working Together programme", g:"Either/Both"},
-{q:"Group/district delivers 'Introducing Woodcraft Folk' at least annually", g:"Either/Both"},
+{q:"Group/district has delivered 'Introducing Woodcraft Folk'", g:"Either/Both"},
 {q:"A supporter or shadow has been identified for each key role", g:"Either/Both"}
 ];
 
