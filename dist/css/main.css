@@ -24,6 +24,10 @@
 	color:#000000;
 }
 
+.clearfix .btn {
+  margin-right:5px;
+}
+
 body {
 
 	padding-top:10px;
@@ -75,3 +79,8 @@ body {
 .voffset7 { margin-top: 80px; }
 .voffset8 { margin-top: 100px; }
 .voffset9 { margin-top: 150px; }
+
+
+.form-inline > * {
+   margin:5px 3px;
+}

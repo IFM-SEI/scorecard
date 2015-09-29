@@ -12,6 +12,7 @@ var clearData = function() {
 
 	session.hash = "";
 	session.group = "";
+	session.district = "";
 	session.groupType= "Elfin";
 	session.card = 0;
 	session.cardName = D[0].name;
@@ -62,16 +63,30 @@ exports.token = Dispatcher.register(function(payload){
 		case "setGroup":
 			setGroup(payload);
 			break;
+		case "setDistrict":
+			setDistrict(payload);
+			break;
 		case "setGroupType":
 			setGroupType(payload);
 			break;
 		case "syncData":
 			save();
 			break;
+		case "resetForm":
+			resetForm();
+			break;
 	};
 });
 
-
+var resetForm = function() {
+	clearData();
+	window.location.hash = "";
+	exports.e.emit("scoreUpdated");
+	$.get('get_session.php', null, function(data) {
+		session.hash = data;
+		//window.location.hash = session.hash;
+	});
+}
 
 var save = function() {
 	var data = JSON.stringify(session);
@@ -112,6 +127,11 @@ var setGroup = function(d) {
 	session.group = d.set;
 }
 
+var setDistrict = function(d) {
+
+	session.district = d.set;
+}
+
 var setGroupType = function(d) {
 
 	session.groupType = d.set;
@@ -132,6 +152,10 @@ var getGroup = function() {
 	return session.group;
 }
 
+var getDistrict = function() {
+	return session.district;
+}
+
 var getGroupType = function() {
 	return session.groupType;
 }
@@ -144,6 +168,7 @@ var getQuestion = function(q) {
 
 exports.getCard = getCard;
 exports.getGroup = getGroup;
+exports.getDistrict = getDistrict;
 exports.getGroupType = getGroupType;
 exports.getPercent = getPercent;
 exports.getQuestion = getQuestion;

@@ -17,19 +17,28 @@ var App = React.createClass({
 	},
 
 	getInitialState: function() {
-    	return {group:Store.getGroup(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false};
+    	return {group:Store.getGroup(),district:Store.getDistrict(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false};
   	},
 
   	change: function() {
-    	this.setState({group:Store.getGroup(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false});
+    	this.setState({group:Store.getGroup(),district:Store.getDistrict(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false});
   	},
 
-	handleChange: function(event) {
+	handleChangeGroup: function(event) {
 
 		this.setState({group:event.target.value,validating: true});
 		Dispatcher.dispatch({action:"setGroup",set:event.target.value});
 
 	},
+
+
+  handleChangeDistrict: function(event) {
+
+    this.setState({district:event.target.value,validating: true});
+    Dispatcher.dispatch({action:"setDistrict",set:event.target.value});
+
+  },
+
 
 	selectDataSet: function(event) { 
 
@@ -54,6 +63,11 @@ var App = React.createClass({
  		 this.setState({saved: true});
 	},
 
+	resetForm: function () {
+		 if(confirm("Are you sure you want to reset? Any unsaved data will be lost"))Dispatcher.dispatch({action:"resetForm"});
+	},
+
+
 	saved: function () {
 		this.setState({hasSaved: this.state.saved ? true : false});
 		this.setState({saved: false});
@@ -69,39 +83,54 @@ var App = React.createClass({
   	});
 
   	var imgStyle= {height:"75px"};
-  	var spinStyle = {width:"27px", height:"27px", marginLeft:"50px"};
+  	var spinStyle = {width:"27px", height:"27px", float:"left"};
   	var textStyle = {};
 
   	spinStyle.display = this.state.saved ?  "block" : "none";
   	textStyle.display = this.state.hasSaved ?  "block" : "none";
 
-  	var inputClass = this.state.validating ? this.state.group === "" ? "form-group has-error" :"form-group has-success" : "form-group";
+  	var inputClassG = this.state.validating ? this.state.group === "" ? "form-group has-error" :"form-group has-success" : "form-group";
+    var inputClassD = this.state.validating ? this.state.district === "" ? "form-group has-error" :"form-group has-success" : "form-group";
 
+    var shade = this.state.group !== "" && this.state.district !== "" ? "none" : "block";
+    var shadeStyle = {top:"0px",left:"0px",width:"100vw",height:"100vh",display:shade, position:"fixed",background:"#ffffff",opacity:0.8, zIndex:50};
+    var z = {zIndex:100,position:"relative"};
+    
     return (<div className="row">
+            <div style={shadeStyle}></div>
 
-    			<div className="col-sm-12">
+    			<div className="col-sm-12" style={z}>
     				<a href="https://www.woodcraft.org.uk"><img src="logo.png" style={imgStyle} className="pull-right" /></a>
     				<h1>Sustainability Scorecard</h1>
     			</div>
     			<div className="col-sm-8">
-    				<div className="panel panel-default hidden-print">
-  						<div className="panel-body">
+    				<div className="panel panel-default hidden-print" style={z}>
+  						<div className="panel-body" >
   						<form className="form-inline">
-  							<div className={inputClass}>
-							<lable className="control-label">Group: </lable><input autoFocus onBlur={this.handleBlur} className="form-control" type="text" onChange={this.handleChange} value={this.state.group}/>
+              <div className={inputClassD}>
+              <lable className="control-label">District: </lable><input autoFocus onBlur={this.handleBlur} className="form-control" type="text" onChange={this.handleChangeDistrict} value={this.state.district}/>
+              </div>
+
+  						<div className={inputClassG}>
+							<lable className="control-label">&nbsp;&nbsp;&nbsp;Group: </lable><input  onBlur={this.handleBlur} className="form-control" type="text" onChange={this.handleChangeGroup} value={this.state.group}/>
 							</div>
+
+              <div className="form-group">
+              <lable className="control-label">&nbsp;&nbsp;&nbsp;Type: </lable><select className="form-control" onChange={this.selectGroupType} value={this.state.groupType}>
+                <option name="Woodchip">Woodchip</option>
+                <option name="Elfin">Elfin</option>
+                <option name="Pioneer">Pioneer</option>
+                <option name="Venturer">Venturer</option>
+                <option name="DF">DF</option>
+                <option name="Open">Open</option>
+                <option name="NA">N/A</option>
+              </select>
+              </div>
+
 							<div className="form-group">
 							<lable className="control-label">&nbsp;&nbsp;&nbsp;Card: </lable><select className="form-control" onChange={this.selectDataSet} value={this.state.dataSet}>{options}</select>
 							</div>
-							<div className="form-group">
-							<lable className="control-label">&nbsp;&nbsp;&nbsp;Type: </lable><select className="form-control" onChange={this.selectGroupType} value={this.state.groupType}>
-								<option name="Elfin">Elfin</option>
-								<option name="Pioneer">Pioneer</option>
-								<option name="Venturer">Venturer</option>
-								<option name="Open">Open</option>
-								<option name="NA">N/A</option>
-							</select>
-							</div>
+							
 						</form>
 						</div>						
 					</div>
@@ -112,6 +141,7 @@ var App = React.createClass({
     				<Results dataSet={D[this.state.dataSet]}/>
     				<div className="clearfix">
     					<button type="button" onClick={this.saveResult} className="btn btn-success pull-left hidden-print">Save</button>
+    					<button type="button" onClick={this.resetForm} className="btn btn-warning pull-left hidden-print">Reset</button>
     					<div style={spinStyle}><Spinner/></div>
     				</div>
     				<div style={textStyle} className="alert alert-success voffset2"><p>Thank you for taking the time to fill this out, you can bookmark this page, save the <a href={window.location.href}>link</a>, or <a href="javascript:print()">print</a> this page for future reference.</p></div>
