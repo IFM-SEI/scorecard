@@ -102,10 +102,25 @@ var save = function() {
 		exports.e.emit("synced");
 	};
 	//ajaxx save
+
+	$.ajax({
+  	 type: "POST",
+ 	 url: 'save.php',
+     data: {sessionData:data},
+     success: function() {
+		window.location.hash = session.hash;
+		setTimeout(fireSync,2000);
+	},
+	async:true,
+	cache:false
+
+	});
+	 /*
 	$.post('save.php', {sessionData:data}, function() {
 		window.location.hash = session.hash;
 		setTimeout(fireSync,2000);
 	});
+	*/
 }
 
 

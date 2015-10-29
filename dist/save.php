@@ -1,4 +1,6 @@
 <?php
+//some carge cult here
+header("Cache-control: no-cache");
 
 
 $db = new PDO("sqlite:/var/databases/sust/database.sqlite");
