@@ -8,7 +8,9 @@ var chars = 0;
 
 var session = {};
 
-var localData = localStorage.getItem("sessionData");
+var localData = false;
+
+if(storageAvailable("localStorage"))localData = localStorage.getItem("sessionData");
 
 var clearData = function() {
 
@@ -96,7 +98,11 @@ var resetForm = function() {
 
 var save = function() {
 	var data = JSON.stringify(session);
-	localStorage.setItem("sessionData",data);
+	if(storageAvailable("localStorage")) {
+			localStorage.setItem("sessionData",data);
+	} else {
+		$.get("nostorage");
+	}
 	//compute category state for database;
 	session.catresults=[];
 	D[session.card].categories.map(function(c,k){
@@ -198,6 +204,19 @@ var getComment = function(q) {
 }
 
 //eval();
+
+function storageAvailable(type) {
+	try {
+		var storage = window[type],
+			x = '__storage_test__';
+		storage.setItem(x, x);
+		storage.removeItem(x);
+		return true;
+	}
+	catch(e) {
+		return false;
+	}
+}
 
 exports.getCard = getCard;
 exports.getGroup = getGroup;
