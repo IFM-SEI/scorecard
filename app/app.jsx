@@ -17,11 +17,11 @@ var App = React.createClass({
 	},
 
 	getInitialState: function() {
-    	return {group:Store.getGroup(),district:Store.getDistrict(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false};
+    	return {comment:Store.getComment(),group:Store.getGroup(),district:Store.getDistrict(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false};
   	},
 
   	change: function() {
-    	this.setState({group:Store.getGroup(),district:Store.getDistrict(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false});
+    	this.setState({comment:Store.getComment(),group:Store.getGroup(),district:Store.getDistrict(),dataSet:Store.getCard(), groupType:Store.getGroupType(), validating: false,saved: false, hasSaved:false});
   	},
 
 	handleChangeGroup: function(event) {
@@ -63,6 +63,12 @@ var App = React.createClass({
  		 this.setState({saved: true});
 	},
 
+  updateComment: function (event) {
+     Dispatcher.dispatch({action:"setComment",set:event.target.value});
+     this.setState({comment:event.target.value});
+  },
+
+
 	resetForm: function () {
 		 if(confirm("Are you sure you want to reset? Any unsaved data will be lost"))Dispatcher.dispatch({action:"resetForm"});
 	},
@@ -81,6 +87,8 @@ var App = React.createClass({
   		return(<option key={k} value={k}>{v.name}</option>);
 
   	});
+
+    var commentStyle = {width:"100%",height:"80px"};
 
   	var imgStyle= {height:"75px"};
   	var spinStyle = {width:"27px", height:"27px", float:"left"};
@@ -139,6 +147,8 @@ var App = React.createClass({
     			</div>
     			<div className="col-sm-4">
     				<Results dataSet={D[this.state.dataSet]}/>
+            <p>Additional notes or comments?</p>
+            <textarea style={commentStyle} value={this.state.comment} onChange={this.updateComment} />
     				<div className="clearfix">
     					<button type="button" onClick={this.saveResult} className="btn btn-success pull-left hidden-print">Save</button>
     					<button type="button" onClick={this.resetForm} className="btn btn-warning pull-left hidden-print">Reset</button>

@@ -4,6 +4,8 @@ import D from './data';
 import $ from 'jquery';
 
 
+var chars = 0;
+
 var session = {};
 
 var localData = localStorage.getItem("sessionData");
@@ -19,6 +21,7 @@ var clearData = function() {
 	session.data = []
 	session.data[session.card] = [];
 	session.catresults=[];
+	session.comment = "";
 
 }
 
@@ -68,6 +71,9 @@ exports.token = Dispatcher.register(function(payload){
 			break;
 		case "setGroupType":
 			setGroupType(payload);
+			break;
+		case "setComment":
+			setComment(payload);
 			break;
 		case "syncData":
 			save();
@@ -152,6 +158,14 @@ var setGroupType = function(d) {
 	session.groupType = d.set;
 }
 
+var setComment = function(d) {
+
+	session.comment = d.set;
+
+	if (chars % 10 == 0)save();//HORRIBLE HACK SAVE EVERY 10 CHARS.
+	chars++;
+}
+
 var getPercent = function(c) {
 	var total = 0;
 	D[session.card].categories[c].questions.map(function(v){if(session.data[session.card][v])total += session.data[session.card][v];});
@@ -179,6 +193,10 @@ var getQuestion = function(q) {
 	return session.data[session.card][q];
 }
 
+var getComment = function(q) {
+	return session.comment;
+}
+
 //eval();
 
 exports.getCard = getCard;
@@ -187,4 +205,5 @@ exports.getDistrict = getDistrict;
 exports.getGroupType = getGroupType;
 exports.getPercent = getPercent;
 exports.getQuestion = getQuestion;
+exports.getComment = getComment;
 //exports.setDataset = setDataset;

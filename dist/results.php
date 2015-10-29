@@ -10,7 +10,7 @@ header("Content-Disposition: attachment; filename=\"scorecard_results_".date("Y-
 $result = $dbquery->execute();
 
 
-printf('District,Group,Type,Card,Last Modified,');
+printf('District,Group,Type,Card,Comment,Last Modified,');
 
     for($i = 0; $i <40; $i++){
 
@@ -28,7 +28,8 @@ while (($row = $dbquery->fetch()) !== false) {
     $data = json_decode($row['data']);
     $data->district = isset($data->district) ? $data->district : "";
     $data->groupType = isset($data->groupType) ? $data->groupType : "";
-    printf('"%s","%s",%s,%s,%s,',$data->district,$data->group,$data->groupType, $data->cardName,$row['form_date']);
+    $data->comment = isset($data->comment) ? $data->comment : "";
+    printf('"%s","%s",%s,%s,"%s",%s,',$data->district,$data->group,$data->groupType, $data->cardName,$data->comment,$row['form_date']);
 
     for($i = 0; $i <40; $i++){
 
