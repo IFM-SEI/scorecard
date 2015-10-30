@@ -253,6 +253,26 @@ var Questions = React.createClass({
   }
 });
 
+function getTarget(e) {
+    var targ;
+
+    if (!e) {
+        e = window.event;
+    }
+
+    if (e.target) {
+        targ = e.target;
+    } else if (e.srcElement) {
+        targ = e.srcElement;
+    }
+
+    if (targ.nodeType == 3) { // defeat Safari bug
+        targ = targ.parentNode;
+    }
+
+    return targ;
+}
+
 var QuestionRow = React.createClass({
 
 	componentDidMount: function(){
@@ -274,7 +294,7 @@ var QuestionRow = React.createClass({
   	},
 
   	handleChange: function(event) {
-  	var num = parseInt(event.target.value);
+  	var num = parseInt(getTarget(event).value);
   	if(num > 3)num = 3;
   	if(num < 0)num = 0;
   	Dispatcher.dispatch({action:"updateScore",question:this.props.id,score:num});
