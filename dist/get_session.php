@@ -1,6 +1,6 @@
 <?php
 //return a session key
-
+header("Cache-control: no-cache");
 
 $db = new PDO("sqlite:/var/databases/sust/database.sqlite");
 
