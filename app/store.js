@@ -34,12 +34,14 @@ if(window.location.hash) {
 		session = data;
 		window.location.hash = session.hash;
 		exports.e.emit("scoreUpdated");
+		document.title = "Sustainability Scorecard: "+session.district+"-"+session.group;
 		//exports.e.emit("synced");
 	});
 
 } else if(localData) {
 	session = JSON.parse(localData);
 	window.location.hash = session.hash;
+	document.title = "Sustainability Scorecard: "+session.district+"-"+session.group;
 
 } else {
 	//get a hash
@@ -152,11 +154,13 @@ var setDataset = function(d) {
 var setGroup = function(d) {
 
 	session.group = d.set;
+	document.title = "Sustainability Scorecard: "+session.district+"-"+session.group;
 }
 
 var setDistrict = function(d) {
 
 	session.district = d.set;
+	document.title = "Sustainability Scorecard: "+session.district+"-"+session.group;
 }
 
 var setGroupType = function(d) {
