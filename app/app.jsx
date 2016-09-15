@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import D from './data';
 import Store from './store';
 import Dispatcher from './dispatcher'
@@ -312,7 +313,7 @@ var QuestionRow = React.createClass({
 
 
 
-React.render(
+ReactDOM.render(
   <App />,
   document.getElementById('scorecard-content')
 );
